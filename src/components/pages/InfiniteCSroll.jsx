@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useCallback } from "react";
 import { Context } from "../contextProvider";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
@@ -12,38 +12,42 @@ export default function InfiniteScroll() {
   const url = "https://jsonplaceholder.typicode.com/users";
   const navigate = useNavigate();
 
-  const fetchData = async () => {
-    setInfinite((prev) => [...prev, ...data]);
+  // Fetch data from API
+  const fetchData = useCallback(async () => {
     try {
       setLoading(true);
-      const response = await axios.get(url); // Fetch data from the API
-      console.log(response.data);
-      setInfinite((prev) => [...prev, ...response.data]); // Append new data to the current infinite data
+      const response = await axios.get(url);
+      setInfinite((prev) => [...prev, ...response.data]); // Append new data
     } catch (error) {
       alert("Error fetching data");
     } finally {
       setLoading(false);
     }
-  };
+  }, [url, setInfinite, setLoading]);
 
-  const handleScroll = () => {
-    // Check if user has scrolled to the bottom of the page
-    if (
-      window.innerHeight + document.documentElement.scrollTop >=
-      document.documentElement.offsetHeight
-    ) {
-      fetchData(); // Load more data
+  // Handle scroll event
+  const handleScroll = useCallback(() => {
+    const scrollTop = document.documentElement.scrollTop;
+    const windowHeight = window.innerHeight;
+    const scrollHeight = document.documentElement.scrollHeight;
+
+    if (scrollTop + windowHeight >= scrollHeight - 50) {
+      fetchData(); // Load more data when nearing the bottom
     }
-  };
+  }, [fetchData]);
 
   useEffect(() => {
-    setInfinite(data); // Initialize infinite data
-    window.addEventListener("scroll", handleScroll); // Add scroll event listener
+    // Initialize infiniteData with initial data
+    setInfinite(data);
+
+    // Add scroll event listener
+    window.addEventListener("scroll", handleScroll);
 
     return () => {
-      window.removeEventListener("scroll", handleScroll); // Cleanup the event listener
+      // Cleanup scroll event listener
+      window.removeEventListener("scroll", handleScroll);
     };
-  }, [data, setInfinite]);
+  }, [data, handleScroll, setInfinite]);
 
   return (
     <div>

@@ -2,14 +2,16 @@ import UserDirectory from "../UserDirectory";
 import NavNewUser from "../navNewUser";
 import { Context } from "../contextProvider";
 import React, { useContext, useEffect, useState } from "react";
-import { IconButton, Grid, Typography, Paper } from "@mui/material";
+import { IconButton, Grid, Typography, Paper, Button } from "@mui/material";
 import { ArrowBack, ArrowForward } from "@mui/icons-material";
+import { useNavigate } from "react-router-dom";
 
 export default function PaginationHome() {
   const [current, setCurrent] = useState(1);
   const [initial, setInitial] = useState(0);
   const [final, setFinal] = useState(4);
   const { pageData, setPageData, data } = useContext(Context);
+  const navigate = useNavigate();
 
   // Calculate the total number of pages
   const pages = Math.ceil(data.length / 4);
@@ -68,6 +70,17 @@ export default function PaginationHome() {
             <ArrowForward />
           </IconButton>
         </Paper>
+      </Grid>
+
+      {/* Infinite Scroller Button */}
+      <Grid container justifyContent="center" sx={{ mb: 2 }}>
+        <Button
+          variant="contained"
+          color="secondary"
+          onClick={() => navigate("/infinite")}
+        >
+          Infinite Scroller
+        </Button>
       </Grid>
 
       {/* User Directory Table */}

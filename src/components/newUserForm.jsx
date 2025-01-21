@@ -1,11 +1,12 @@
-import React, { useState, useContext, useEffect } from "react";
+import React, { useState, useContext } from "react";
 import axios from "axios";
 import { Context } from "./contextProvider";
+import { Dialog, DialogTitle, DialogContent, DialogActions, TextField, Button, IconButton } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 
 export default function NewUserForm() {
-  const { setData, setRegister, editData, openEdit, setOpen, setEditData } =
-    useContext(Context);
+  const { setData, setRegister } = useContext(Context);
+
   const [formData, setFormData] = useState({
     id: "",
     name: "",
@@ -22,28 +23,6 @@ export default function NewUserForm() {
     bs: "",
   });
 
-  useEffect(() => {
-    if (editData) {
-        console.log(editData);
-      setFormData({
-        id: editData.id,
-        name: editData.name,
-        email: editData.email,
-        username: editData.username,
-        street: editData.street || "",
-        suite: editData.suite || "",
-        city: editData.city || "",
-        zipcode: editData.zipcode || "",
-        phone: editData.phone,
-        website: editData.website,
-        companyName: editData.name || "",
-        catchPhrase: editData.catchPhrase || "",
-        bs: editData.bs || "",
-      });
-      setEditData([]);
-    }
-  }, [editData]);
-
   const [errors, setErrors] = useState({});
 
   function handleChange(e) {
@@ -54,7 +33,7 @@ export default function NewUserForm() {
   function validateForm() {
     const newErrors = {};
     Object.keys(formData).forEach((key) => {
-      if (!formData[key] && key !== "id") {
+      if (!formData[key]) {
         newErrors[key] = `${key} is required`;
       }
     });
@@ -86,34 +65,14 @@ export default function NewUserForm() {
       };
 
       try {
-        let response;
-        if (editData) {
-          // Update user data
-          response = await axios.put(
-            `https://jsonplaceholder.typicode.com/users/${formData.id}`,
-            payload
-          );
-        } else {
-          // Create new user
-          response = await axios.post(
-            "https://jsonplaceholder.typicode.com/users",
-            payload
-          );
-        }
+        const response = await axios.post(
+          "https://jsonplaceholder.typicode.com/users",
+          payload
+        );
 
-        if (response.status === (formData.id ? 200 : 201)) {
-          if (formData.id) {
-            // If updating, replace the updated user in state
-            setData((prev) =>
-              prev.map((user) => (user.id === formData.id ? payload : user))
-            );
-          } else {
-            // If new user, add it to state
-            setData((prev) => [...prev, payload]);
-          }
-          alert(
-            `User data ${formData.id ? "updated" : "submitted"} successfully!`
-          );
+        if (response.status === 201) {
+          setData((prev) => [...prev, payload]);
+          alert("User data submitted successfully!");
           setRegister(false);
           setFormData({
             id: "",
@@ -140,114 +99,116 @@ export default function NewUserForm() {
   }
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      style={{
-        maxWidth: "600px",
-        margin: "0 auto",
-        padding: "20px",
-        border: "1px solid #ccc",
-        borderRadius: "8px",
-        boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+    <Dialog 
+      open={true} 
+      onClose={() => setRegister(false)} 
+      sx={{
+        "& .MuiDialog-paper": {
+          backgroundColor: "white", // Set the entire modal background to white
+          width: { xs: "90%", sm: "80%", md: "60%", lg: "50%" }, // Adjust width for different screen sizes
+          maxWidth: "90%", // Maximum width
+          borderRadius: "8px", // Rounded corners
+        },
       }}
     >
-      <h1 style={{ textAlign: "center", marginBottom: "20px" }}>
-        {formData.id ? "Edit User" : "New User Registration"}
-      </h1>
-      <button
-        onClick={() => setRegister(false)}
-        style={{ background: "none", border: "none", cursor: "pointer" }}
+      <DialogTitle>
+        New User Registration
+        <IconButton
+          edge="end"
+          color="inherit"
+          onClick={() => setRegister(false)}
+          aria-label="close"
+          style={{ position: "absolute", top: 10, right: 10 }}
+        >
+          <CloseIcon />
+        </IconButton>
+      </DialogTitle>
+      <DialogContent
+        sx={{
+          backgroundColor: "white", // White background for the content area
+          padding: "20px",
+          borderRadius: "8px", // Rounded corners for content
+        }}
       >
-        <CloseIcon />
-      </button>
-
-      {[{ label: "ID", id: "id", type: "number", disabled: formData.id }]
-        .concat([
+        {[ 
+          { label: "ID", id: "id", type: "number" },
           { label: "Name", id: "name", type: "text" },
           { label: "Email", id: "email", type: "email" },
           { label: "Username", id: "username", type: "text" },
           { label: "Phone", id: "phone", type: "text" },
           { label: "Website", id: "website", type: "text" },
-        ])
-        .map((field) => (
+        ].map((field) => (
           <div key={field.id} style={{ marginBottom: "10px" }}>
-            <label htmlFor={field.id}>{field.label}</label>
-            <input
+            <TextField
+              fullWidth
+              variant="outlined"
+              label={field.label}
+              id={field.id}
               type={field.type}
-              id={field.id}
               placeholder={`Enter ${field.label}`}
               value={formData[field.id]}
               onChange={handleChange}
-              disabled={field.disabled || false}
+              error={Boolean(errors[field.id])}
+              helperText={errors[field.id]}
+              sx={{ backgroundColor: "white", borderRadius: "4px" }}
             />
-            {errors[field.id] && (
-              <p style={{ color: "red", margin: 0 }}>{errors[field.id]}</p>
-            )}
           </div>
         ))}
 
-      <fieldset style={{ marginBottom: "10px" }}>
-        <legend>Address</legend>
-        {[
-          { label: "Street", id: "street" },
-          { label: "Suite", id: "suite" },
-          { label: "City", id: "city" },
-          { label: "Zipcode", id: "zipcode" },
-        ].map((field) => (
-          <div key={field.id}>
-            <label htmlFor={field.id}>{field.label}</label>
-            <input
-              type="text"
-              id={field.id}
-              placeholder={`Enter ${field.label}`}
-              value={formData[field.id]}
-              onChange={handleChange}
-            />
-            {errors[field.id] && (
-              <p style={{ color: "red", margin: 0 }}>{errors[field.id]}</p>
-            )}
-          </div>
-        ))}
-      </fieldset>
+        <fieldset style={{ marginBottom: "10px", border: "none" }}>
+          <legend>Address</legend>
+          {[ 
+            { label: "Street", id: "street" },
+            { label: "Suite", id: "suite" },
+            { label: "City", id: "city" },
+            { label: "Zipcode", id: "zipcode" },
+          ].map((field) => (
+            <div key={field.id}>
+              <TextField
+                fullWidth
+                variant="outlined"
+                label={field.label}
+                id={field.id}
+                placeholder={`Enter ${field.label}`}
+                value={formData[field.id]}
+                onChange={handleChange}
+                error={Boolean(errors[field.id])}
+                helperText={errors[field.id]}
+                sx={{ backgroundColor: "white", borderRadius: "4px" }}
+              />
+            </div>
+          ))}
+        </fieldset>
 
-      <fieldset>
-        <legend>Company</legend>
-        {[
-          { label: "Name", id: "companyName" },
-          { label: "Catch Phrase", id: "catchPhrase" },
-          { label: "BS", id: "bs" },
-        ].map((field) => (
-          <div key={field.id}>
-            <label htmlFor={field.id}>{field.label}</label>
-            <input
-              type="text"
-              id={field.id}
-              placeholder={`Enter ${field.label}`}
-              value={formData[field.id]}
-              onChange={handleChange}
-            />
-            {errors[field.id] && (
-              <p style={{ color: "red", margin: 0 }}>{errors[field.id]}</p>
-            )}
-          </div>
-        ))}
-      </fieldset>
-
-      <button
-        type="submit"
-        style={{
-          display: "block",
-          margin: "20px auto",
-          padding: "10px 20px",
-          backgroundColor: "#007BFF",
-          color: "white",
-          border: "none",
-          borderRadius: "5px",
-          cursor: "pointer",
-        }}
-      >
-        {editData ? "Update" : "Submit"}
-      </button>
-    </form>
+        <fieldset style={{ border: "none" }}>
+          <legend>Company</legend>
+          {[ 
+            { label: "Name", id: "companyName" },
+            { label: "Catch Phrase", id: "catchPhrase" },
+            { label: "BS", id: "bs" },
+          ].map((field) => (
+            <div key={field.id}>
+              <TextField
+                fullWidth
+                variant="outlined"
+                label={field.label}
+                id={field.id}
+                placeholder={`Enter ${field.label}`}
+                value={formData[field.id]}
+                onChange={handleChange}
+                error={Boolean(errors[field.id])}
+                helperText={errors[field.id]}
+                sx={{ backgroundColor: "white", borderRadius: "4px" }}
+              />
+            </div>
+          ))}
+        </fieldset>
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={handleSubmit} color="primary" variant="contained" fullWidth>
+          Submit
+        </Button>
+      </DialogActions>
+    </Dialog>
   );
 }

@@ -1,0 +1,211 @@
+User Management Dashboard
+Overview
+The User Management Dashboard is a simple web application designed for managing user data. Built using Vite, the application interacts with the JSONPlaceholder API to demonstrate features such as viewing, adding, editing, and deleting users.
+
+This project focuses on core CRUD functionalities, responsive design, and error handling for a seamless user experience.
+and also have the functionalities like pagination and infinite scrouller
+
+
+Here's the complete README file in Markdown format:
+
+User Management Dashboard
+Overview
+The User Management Dashboard is a simple web application designed for managing user data. Built using Vite, the application interacts with the JSONPlaceholder API to demonstrate features such as viewing, adding, editing, and deleting users.
+
+This project focuses on core CRUD functionalities, responsive design, and error handling for a seamless user experience.
+
+Features
+User Management:
+View user details .
+Add new users via a form.
+Edit existing user details.
+Delete users from the list.
+Error Handling: Displays user-friendly error messages for API failures.
+Responsive Design: Optimized for all screen sizes.
+Pagination
+Responsive design
+Infinite Scroll bar
+
+Technologies Used
+Frontend Framework: HTML,CSS,JS,React (with Vite)
+HTTP Requests: Axios
+CSS Framework: Material-UI (MUI)
+
+Setup and Run Instructions
+Prerequisites
+Before running the project, ensure you have the following installed:
+
+Node.js (v16 or later).
+npm or yarn (package manager).
+
+Steps to Run the Project
+Clone the Repository
+Clone this repository to your local machine:
+
+bash
+Copy
+Edit
+git clone https://github.com/RakshitaGanesh22/User_Management_Dashboard1.git
+cd User_Management_Dashboard1
+Install Dependencies
+
+npm run preview
+src/
+├── components/pages
+|               |--InfiniteScroll.jsx  #Displays the infinite scrolling view of the data
+|               |--PaginationHome.jsx   #Displays the Pagination view of the data
+│   ├── contextProvider.jsx     # used for state management through out the application
+│   ├── EditUserForm.jsx        # Display the form for user to edit
+│   └── navNewUser.jsx          # displays welcom message and utton to add the user
+|   └── newUserForm.jsx         # Display the form for user to register
+|   └── themeContext.jsx        # Displays a constant theming and also used for responsive design
+|   └── userAPIData.jsx         # Axios instance and API methods 
+|   └── UserDirectory.jsx       #Displays the table data
+|   └── UserProfileCard.jsx     #displays table data for each user         
+├── App.jsx              # Main app entry point
+├── index.css            # Global styles
+public/
+├── favicon.ico          # Favicon
+├── index.html           # HTML template
+vite.config.js           # Vite configuration
+
+API Used
+JSONPlaceholder: A free mock REST API for testing.
+Endpoint: /users
+
+Features Implementation
+View Users:
+Fetches data from the /users endpoint and displays it in a tabular format.
+Add Users:
+A form collects user data and sends it to the API via a POST request.
+Edit Users:
+The current data for a user is fetched and pre-filled in a form for editing. Updates are sent via a PUT request.
+Delete Users:
+Sends a DELETE request to remove a user.
+pagination:
+infinite scroulling
+
+npm run dev: Starts the development server.
+npm run build: Creates a production build.
+npm run preview: Previews the production build locally.
+
+Here's the complete README file in Markdown format:
+
+User Management Dashboard
+Overview
+The User Management Dashboard is a simple web application designed for managing user data. Built using Vite, the application interacts with the JSONPlaceholder API to demonstrate features such as viewing, adding, editing, and deleting users.
+
+This project focuses on core CRUD functionalities, responsive design, and error handling for a seamless user experience.
+
+Features
+User Management:
+View user details (ID, First Name, Last Name, Email, Department).
+Add new users via a form.
+Edit existing user details.
+Delete users from the list.
+Error Handling: Displays user-friendly error messages for API failures.
+Responsive Design: Optimized for all screen sizes.
+Technologies Used
+Frontend Framework: React (with Vite)
+HTTP Requests: Axios
+CSS Framework: Material-UI (MUI)
+Setup and Run Instructions
+Prerequisites
+Before running the project, ensure you have the following installed:
+
+Node.js (v16 or later).
+npm or yarn (package manager).
+Steps to Run the Project
+Clone the Repository
+Clone this repository to your local machine:
+
+bash
+Copy
+Edit
+git clone https://github.com/your-username/your-repo-name.git
+cd your-repo-name
+Install Dependencies
+Install all required dependencies:
+
+bash
+Copy
+Edit
+npm install
+Run the Development Server
+Start the local development server:
+
+bash
+Copy
+Edit
+npm run dev
+Access the Application
+Open your browser and go to:
+
+arduino
+Copy
+Edit
+http://localhost:5173
+Build for Production
+If you want to create a production build:
+
+bash
+Copy
+Edit
+npm run build
+To preview the build:
+
+bash
+Copy
+Edit
+npm run preview
+Project Structure
+plaintext
+Copy
+Edit
+src/
+├── components/
+│   ├── UserList.jsx     # Displays the list of users
+│   ├── UserForm.jsx     # Form to add or edit user details
+│   └── NavBar.jsx       # Navigation bar component
+├── api/
+│   └── api.js           # Axios instance and API methods
+├── App.jsx              # Main app entry point
+├── index.css            # Global styles
+└── main.jsx             # ReactDOM render entry
+public/
+├── favicon.ico          # Favicon
+├── index.html           # HTML template
+vite.config.js           # Vite configuration
+API Used
+JSONPlaceholder: A free mock REST API for testing.
+Endpoint: /users
+API Documentation
+Features Implementation
+View Users:
+Fetches data from the /users endpoint and displays it in a tabular format.
+Add Users:
+A form collects user data and sends it to the API via a POST request.
+Edit Users:
+The current data for a user is fetched and pre-filled in a form for editing. Updates are sent via a PUT request.
+Delete Users:
+Sends a DELETE request to remove a user.
+Scripts
+npm run dev: Starts the development server.
+npm run build: Creates a production build.
+npm run preview: Previews the production build locally.
+
+
+##Challenges Faced
+  |-faced challage to fetch the data for infinite scrolling
+  |-faced issue while creating the Edit userForm- initially thought of combining newUser and Edit form But
+    it does not work does not work let do multiple error eventually created new file and it worked
+  |-this are some majior issue faced and the minor isuues got resolved quickly
+ 
+ Improvements
+
+Enhance the user interface for better accessibility and UX.
+Add Better Styling for best user Expeirence
+
+License
+This project is open-source and free to use under the MIT License.
+

@@ -51,7 +51,9 @@ export default function InfiniteScroll() {
     return () => {
       window.removeEventListener("scroll", handleScroll);
     };
-  }, [data, setInfinite]);
+  }, [data,   infiniteData,
+    setInfinite,
+    setFinite,]);
 
   return (
     <div>

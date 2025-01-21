@@ -8,6 +8,8 @@ function Contextprovider({ children }) {
   const [editData, setEditData] = useState([]);
   const [openEdit, setOpen] = useState(false);
   const [pageData, setPageData] = useState([]);
+  const [infiniteData, setInfinite] = useState([]);
+  const [finiteOpen, setFinite] = useState(false);
   return (
     <Context.Provider
       value={{
@@ -23,6 +25,10 @@ function Contextprovider({ children }) {
         setOpen,
         pageData,
         setPageData,
+        infiniteData,
+        setInfinite,
+        finiteOpen,
+        setFinite,
       }}
     >
       {children}

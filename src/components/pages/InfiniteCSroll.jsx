@@ -4,25 +4,25 @@ import { Context } from "../contextProvider";
 import React, { useContext, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { Grid, Button } from "@mui/material";
+
 export default function InfiniteScroll() {
   const {
-    pageData,
-    setPageData,
     data,
     setLoading,
     infiniteData,
     setInfinite,
     setFinite,
   } = useContext(Context);
-  let url = "https://jsonplaceholder.typicode.com/users";
+  const url = "https://jsonplaceholder.typicode.com/users";
   const navigate = useNavigate();
+
   const fetchData = async () => {
-    setInfinite((prev) => [...prev, ...data]);
     try {
       setLoading(true);
-      const response = await axios.get(url); // Make API call to fetch data
-      console.log(response.data);
-      setInfinite((prev) => [...prev, ...response.data]); // Append new data to the current data
+      const response = await axios.get(url); // Fetch data from the API
+      console.log("Fetched Data:", response.data);
+      setInfinite((prev) => [...prev, ...response.data,...data]); // Append new data
     } catch (error) {
       alert("Error fetching data");
     } finally {
@@ -30,25 +30,28 @@ export default function InfiniteScroll() {
     }
   };
 
-  // Scroll event listener
   const handleScroll = () => {
-    // Check if we're at the bottom of the page
+    // Trigger data fetch when scrolled to the bottom
     if (
-      window.innerHeight + document.documentElement.scrollTop ===
-      document.documentElement.offsetHeight
+      window.innerHeight + document.documentElement.scrollTop >=
+      document.documentElement.offsetHeight - 1
     ) {
       fetchData();
     }
   };
 
   useEffect(() => {
-    setInfinite(data);
-    window.addEventListener("scroll", handleScroll); // Add scroll event listener
+    setInfinite(data); // Initialize infinite data
+    fetchData(); // Fetch the initial data
 
+    // Add scroll event listener
+    window.addEventListener("scroll", handleScroll);
+
+    // Cleanup event listener on unmount
     return () => {
-      window.removeEventListener("scroll", handleScroll); // Cleanup the event listener on unmount
+      window.removeEventListener("scroll", handleScroll);
     };
-  }, []);
+  }, [data, setInfinite]);
 
   return (
     <div>

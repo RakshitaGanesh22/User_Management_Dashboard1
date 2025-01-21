@@ -1,72 +1,70 @@
-import React, { useContext, useEffect, useCallback } from "react";
+import UserDirectory from "../UserDirectory";
+import NavNewUser from "../navNewUser";
 import { Context } from "../contextProvider";
+import React, { useContext, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { Grid, Button } from "@mui/material";
-import NavNewUser from "../navNewUser";
-import UserDirectory from "../UserDirectory";
-
 export default function InfiniteScroll() {
-  const { data, setLoading, infiniteData, setInfinite, setFinite } =
-    useContext(Context);
-  const url = "https://jsonplaceholder.typicode.com/users";
+  const {
+    pageData,
+    setPageData,
+    data,
+    setLoading,
+    infiniteData,
+    setInfinite,
+    setFinite,
+  } = useContext(Context);
+  let url = "https://jsonplaceholder.typicode.com/users";
   const navigate = useNavigate();
-
-  // Fetch data from API
-  const fetchData = useCallback(async () => {
+  const fetchData = async () => {
+    setInfinite((prev) => [...prev, data]);
     try {
       setLoading(true);
-      const response = await axios.get(url);
-      setInfinite((prev) => [...prev, ...response.data]); // Append new data
+      const response = await axios.get(url); // Make API call to fetch data
+      console.log(response.data);
+      setInfinite((prev) => [...prev, ...response.data]); // Append new data to the current data
     } catch (error) {
       alert("Error fetching data");
     } finally {
       setLoading(false);
     }
-  }, [url, setInfinite, setLoading]);
+  };
 
-  // Handle scroll event
-  const handleScroll = useCallback(() => {
-    const scrollTop = document.documentElement.scrollTop;
-    const windowHeight = window.innerHeight;
-    const scrollHeight = document.documentElement.scrollHeight;
-
-    if (scrollTop + windowHeight >= scrollHeight - 50) {
-      fetchData(); // Load more data when nearing the bottom
+  // Scroll event listener
+  const handleScroll = () => {
+    // Check if we're at the bottom of the page
+    if (
+      window.innerHeight + document.documentElement.scrollTop ===
+      document.documentElement.offsetHeight
+    ) {
+      fetchData();
     }
-  }, [fetchData]);
+  };
 
   useEffect(() => {
-    // Initialize infiniteData with initial data
     setInfinite(data);
-
-    // Add scroll event listener
-    window.addEventListener("scroll", handleScroll);
+    window.addEventListener("scroll", handleScroll); // Add scroll event listener
 
     return () => {
-      // Cleanup scroll event listener
-      window.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("scroll", handleScroll); // Cleanup the event listener on unmount
     };
-  }, [data, handleScroll, setInfinite]);
+  }, []);
 
   return (
     <div>
       <NavNewUser />
-
-      {/* Navigation to Pagination */}
       <Grid container justifyContent="center" sx={{ mb: 2 }}>
         <Button
           variant="contained"
           color="secondary"
           onClick={() => {
             setFinite(false);
-            navigate("/"); // Navigate to the pagination page
+            navigate("/");
           }}
         >
           Pagination
         </Button>
       </Grid>
-
       {/* User Directory Table */}
       <UserDirectory />
     </div>

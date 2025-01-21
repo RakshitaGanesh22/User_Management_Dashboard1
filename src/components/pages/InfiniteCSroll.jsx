@@ -13,6 +13,7 @@ export default function InfiniteScroll() {
   const navigate = useNavigate();
 
   const fetchData = async () => {
+    setInfinite((prev) => [...prev, ...data]);
     try {
       setLoading(true);
       const response = await axios.get(url); // Fetch data from the API

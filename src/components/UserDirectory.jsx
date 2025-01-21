@@ -41,32 +41,32 @@ export default function UserDirectory() {
             >
               <TableHead>
                 <TableRow>
-                  <TableCell>
+                  <TableCell sx={{ borderColor: "#000", border: 1 }}>
                     <Typography variant="h6" align="center" color="#000">
                       ID
                     </Typography>
                   </TableCell>
-                  <TableCell>
+                  <TableCell sx={{ borderColor: "#000", border: 1 }}>
                     <Typography variant="h6" align="center" color="#000">
                       UserName
                     </Typography>
                   </TableCell>
-                  <TableCell>
+                  <TableCell sx={{ borderColor: "#000", border: 1 }}>
                     <Typography variant="h6" align="center" color="#000">
                       Full Name
                     </Typography>
                   </TableCell>
-                  <TableCell>
+                  <TableCell sx={{ borderColor: "#000", border: 1 }}>
                     <Typography variant="h6" align="center" color="#000">
                       Email
                     </Typography>
                   </TableCell>
-                  <TableCell>
+                  <TableCell sx={{ borderColor: "#000", border: 1 }}>
                     <Typography variant="h6" align="center" color="#000">
                       Company Name
                     </Typography>
                   </TableCell>
-                  <TableCell>
+                  <TableCell sx={{ borderColor: "#000", border: 1 }}>
                     <Typography variant="h6" align="center" color="#000">
                       Actions
                     </Typography>

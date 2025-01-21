@@ -1,43 +1,35 @@
-import UserDirectory from "../UserDirectory";
-import NavNewUser from "../navNewUser";
-import { Context } from "../contextProvider";
 import React, { useContext, useEffect, useState } from "react";
 import { IconButton, Grid, Typography, Paper, Button } from "@mui/material";
 import { ArrowBack, ArrowForward } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
+import NavNewUser from "../navNewUser";
+import UserDirectory from "../UserDirectory";
+import { Context } from "../contextProvider";
 
 export default function PaginationHome() {
-  const [current, setCurrent] = useState(1);
-  const [initial, setInitial] = useState(0);
-  const [final, setFinal] = useState(4);
-  const { pageData, setPageData, data } = useContext(Context);
+  const [current, setCurrent] = useState(1); // Current page
+  const { pageData, setPageData, data, setFinite } = useContext(Context);
   const navigate = useNavigate();
 
-  // Calculate the total number of pages
-  const pages = Math.ceil(data.length / 4);
+  const itemsPerPage = 4; // Number of items per page
+  const pages = Math.ceil(data.length / itemsPerPage); // Total number of pages
 
   useEffect(() => {
-    // Load initial page data
-    const loadData = () => {
-      const currentData = data.slice(initial, final);
-      setPageData(currentData);
-    };
-    loadData();
-  }, [initial, final, data, setPageData]);
+    // Calculate and set page data
+    const start = (current - 1) * itemsPerPage;
+    const end = start + itemsPerPage;
+    setPageData(data.slice(start, end));
+  }, [current, data, setPageData]);
 
   const handlePrev = () => {
     if (current > 1) {
-      setCurrent(current - 1);
-      setInitial(initial - 4);
-      setFinal(final - 4);
+      setCurrent((prev) => prev - 1);
     }
   };
 
   const handleNext = () => {
     if (current < pages) {
-      setCurrent(current + 1);
-      setInitial(initial + 4);
-      setFinal(final + 4);
+      setCurrent((prev) => prev + 1);
     }
   };
 
@@ -49,16 +41,21 @@ export default function PaginationHome() {
       <Grid container justifyContent="center" sx={{ mb: 2 }}>
         <Paper
           elevation={3}
-          sx={{ padding: 2, display: "flex", alignItems: "center" }}
+          sx={{
+            padding: 2,
+            display: "flex",
+            alignItems: "center",
+            maxWidth: "400px",
+            width: "100%",
+          }}
         >
-          <Typography variant="h6" sx={{ flexGrow: 1 }}>
+          <Typography variant="h6" sx={{ flexGrow: 1, textAlign: "center" }}>
             Page {current} of {pages}
           </Typography>
           <IconButton
             color="primary"
             onClick={handlePrev}
             disabled={current <= 1}
-            sx={{ mr: 1 }}
           >
             <ArrowBack />
           </IconButton>
@@ -77,7 +74,10 @@ export default function PaginationHome() {
         <Button
           variant="contained"
           color="secondary"
-          onClick={() => navigate("/infinite")}
+          onClick={() => {
+            setFinite(true);
+            navigate("/infinite");
+          }}
         >
           Infinite Scroller
         </Button>

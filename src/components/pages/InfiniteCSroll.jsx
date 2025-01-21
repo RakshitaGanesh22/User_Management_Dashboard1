@@ -22,7 +22,7 @@ export default function InfiniteScroll() {
       setLoading(true);
       const response = await axios.get(url); // Fetch data from the API
       console.log("Fetched Data:", response.data);
-      setInfinite((prev) => [...prev,...data]); // Append new data
+      setInfinite((prev) => {return [...prev, ...response.data]}); // Append new data
     } catch (error) {
       alert("Error fetching data");
     } finally {
@@ -51,9 +51,7 @@ export default function InfiniteScroll() {
     return () => {
       window.removeEventListener("scroll", handleScroll);
     };
-  }, [data,   infiniteData,
-    setInfinite,
-    setFinite,]);
+  }, [data, setInfinite]);
 
   return (
     <div>

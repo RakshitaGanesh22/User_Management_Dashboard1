@@ -1,11 +1,10 @@
-import React from "react";
-import { useContext } from "react";
+import React, { useContext } from "react";
 import { Context } from "./contextProvider";
 import CircularProgress from "@mui/material/CircularProgress";
 import UserProfileCard from "./userProfileCard";
 import EditUserForm from "./EditUserForm";
 import {
-  Grid2,
+  Grid,
   Paper,
   Table,
   TableBody,
@@ -17,71 +16,74 @@ import {
 } from "@mui/material";
 
 export default function UserDirectory() {
-  const { pageData, loading, openEdit } = useContext(Context);
+  const { pageData, loading, openEdit, finiteOpen, infiniteData } =
+    useContext(Context);
 
   return (
     <div>
+      {/* Loading Spinner */}
       {loading && (
-        <Grid2 container justifyContent="center" alignItems="center">
+        <Grid container justifyContent="center" alignItems="center">
           <CircularProgress />
-        </Grid2>
+        </Grid>
       )}
 
-      <Grid2 container justifyContent="center" sx={{ mt: 3 }}>
-        <Typography variant="h4" align="center">
+      {/* User Details Table */}
+      <Grid container justifyContent="center" sx={{ mt: 3 }}>
+        <Typography variant="h4" align="center" gutterBottom>
           Users Details
         </Typography>
         <Paper elevation={3} sx={{ width: "100%", overflow: "hidden" }}>
-          <TableContainer border="1" sx={{ borderColor: "#000" }}>
+          <TableContainer>
             <Table
               aria-label="user details"
-              border="1"
-              sx={{ borderColor: "#000" }}
+              sx={{ borderColor: "#000", border: 1 }}
             >
-              <TableHead border="1" sx={{ borderColor: "#000" }}>
-                <TableRow border="1" sx={{ borderColor: "#000" }}>
-                  <TableCell sx={{ borderColor: "#000", border: 1 }}>
+              <TableHead>
+                <TableRow>
+                  <TableCell>
                     <Typography variant="h6" align="center" color="#000">
                       ID
                     </Typography>
                   </TableCell>
-                  <TableCell sx={{ borderColor: "#000", border: 1 }}>
+                  <TableCell>
                     <Typography variant="h6" align="center" color="#000">
                       UserName
                     </Typography>
                   </TableCell>
-                  <TableCell sx={{ borderColor: "#000", border: 1 }}>
+                  <TableCell>
                     <Typography variant="h6" align="center" color="#000">
                       Full Name
                     </Typography>
                   </TableCell>
-                  <TableCell sx={{ borderColor: "#000", border: 1 }}>
+                  <TableCell>
                     <Typography variant="h6" align="center" color="#000">
                       Email
                     </Typography>
                   </TableCell>
-                  <TableCell sx={{ borderColor: "#000", border: 1 }}>
+                  <TableCell>
                     <Typography variant="h6" align="center" color="#000">
                       Company Name
                     </Typography>
                   </TableCell>
-                  <TableCell sx={{ borderColor: "#000", border: 1 }}>
+                  <TableCell>
                     <Typography variant="h6" align="center" color="#000">
                       Actions
                     </Typography>
                   </TableCell>
                 </TableRow>
               </TableHead>
-              <TableBody sx={{ borderColor: "#000", border: 1 }}>
-                {pageData.map((user) => (
+              <TableBody>
+                {(!finiteOpen ? pageData : infiniteData).map((user) => (
                   <UserProfileCard key={user.id} user={user} />
                 ))}
               </TableBody>
             </Table>
           </TableContainer>
         </Paper>
-      </Grid2>
+      </Grid>
 
+      {/* Edit User Form */}
       {openEdit && <EditUserForm />}
     </div>
   );

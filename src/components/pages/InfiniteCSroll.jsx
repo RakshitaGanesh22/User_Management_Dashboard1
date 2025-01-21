@@ -17,7 +17,7 @@ export default function InfiniteScroll() {
   let url = "https://jsonplaceholder.typicode.com/users";
   const navigate = useNavigate();
   const fetchData = async () => {
-    setInfinite((prev) => [...prev, data]);
+    setInfinite((prev) => [...prev, ...data]);
     try {
       setLoading(true);
       const response = await axios.get(url); // Make API call to fetch data
